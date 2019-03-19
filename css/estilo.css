@@ -1,0 +1,54 @@
+.menu_icon{
+	height:50px;
+	width: 50px;
+	display: block;
+	padding:3px;
+	cursor: pointer;
+
+
+}
+
+.menu_icon:hover{
+		box-shadow: 1px 2px 3px blue;
+
+
+}
+
+.dashboard_icon img{
+	height: 50px;
+	width: 50px;
+	cursor: pointer;
+	padding: 5PX;
+
+}
+
+p{
+	padding: 10px;
+	font-size: 18px;
+}
+
+label {
+
+	padding:5PX;
+}
+
+.form_modular{
+	z-index: 10;
+	position: absolute;
+
+
+
+
+}
+
+.reportes{
+	border-color:black;
+	padding-bottom: 10px;
+	border-top:1px solid;
+	border-bottom:1px solid;
+	color:black;
+
+
+
+}
+
