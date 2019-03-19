@@ -347,18 +347,19 @@ class agencia  extends conexion {
 
  	//locacion
 
- 	function guardar_locacion($nombre_locacion,$pagina_web,$email,$direccion){
+ 	function guardar_locacion($nombre_locacion,$pagina_web,$email,$direccion,$telefono){
  		//Debug
  		//echo  $nombre_locacion." ".$pagina_web." ".$pagina_web." ".$email." ".$direccion;
  		global $conexion;
 
- 		$sql = "insert into locacion (nombre_locacion,pagina_web,email,direccion)values(?,?,?,?)";
+ 		$sql = "insert into locacion (nombre_locacion,pagina_web,email,direccion,telefono)values(?,?,?,?,?)";
  		$guardar = $conexion->prepare($sql);
- 		$guardar->bind_param('ssss',
+ 		$guardar->bind_param('sssss',
  				$nombre_locacion,
  				$pagina_web,
  				$email,
- 				$direccion
+ 				$direccion,
+ 				$telefono
  		);
 
  		if($guardar->execute()){
@@ -371,15 +372,16 @@ class agencia  extends conexion {
 
  	}
 
- 	function actualizar_locacion($nombre_locacion,$pagina_web,$email,$direccion,$id_locacion){
+ 	function actualizar_locacion($nombre_locacion,$pagina_web,$email,$direccion,$telefono,$id_locacion){
  		global $conexion;
- 		$sql = "update locacion set nombre_locacion=?,pagina_web=?,email=?,direccion=? where locacion_id=?";
+ 		$sql = "update locacion set nombre_locacion=?,pagina_web=?,email=?,direccion=?,telefono=? where locacion_id=?";
  		$update = $conexion->prepare($sql);
- 		$update->bind_param('ssssi',
+ 		$update->bind_param('sssssi',
  			$nombre_locacion,
  			$pagina_web,
  			$email,
  			$direccion,
+ 			$telefono,
  			$id_locacion
  		);
  		if($update->execute()){
@@ -472,6 +474,37 @@ class agencia  extends conexion {
  			echo "reservacion eliminada con exito";
  		}
 
+
+ 	}
+
+ 	function login($usuario,$clave){
+ 			global $conexion;
+ 			$sql = "select * from usuario where usuario=? and clave=?";
+ 			$logiar = $conexion->prepare($sql);
+ 			$logiar->bind_param('ss',
+ 				$usuario,
+ 				$clave
+ 			);
+
+ 			$logiar->execute();
+ 			$data = $logiar->get_result();
+ 			if($data->num_rows>0){
+
+ 					$data = mysqli_fetch_object($data);
+ 					session_start();
+
+ 					$_SESSION['usuario'] = $data->usuario;
+ 					$_SESSION['clave'] = $data->clave;
+ 					$_SESSION['nombre'] = $data->nombre;
+ 					$_SESSION['apellido'] = $data->apellido;
+ 					header("location:index.php");
+ 			}else{
+
+ 				echo "este usuario no existe";
+ 
+ 				header("location:login.php");
+
+ 			}
 
  	}
 

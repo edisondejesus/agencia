@@ -1034,7 +1034,7 @@ $('#cargar_reportes').click(()=>{
 		$('#agregar_servicio').click(()=>{
 
 
-				$('#forms').html(`<div class='card form-modular col-md-5'>
+				$('#forms').html(`<div class='card form-modular col-md-8'>
 					<strong>Nombre Locacion</strong>
 					<input type='text' class='form-control' id='nombre_locacion'/><br>
 					<strong>Pagina web</strong>
@@ -1042,9 +1042,9 @@ $('#cargar_reportes').click(()=>{
 					<strong>Email</strong>
 					<input type='text' id='email' class='form-control'/><br>
 					<strong>Direccion</strong></br>
-					<input type='text' id='direccion' class='form-control/><br>
+					<input type='text' id='direccion' class='form-control'/><br>
 					<strong>Telefono</strong><br>
-					<input type='text' class='form-control' id='telefono'/><br>
+					<input type='passowrd' class='form-control' id='telefono' /><br>
 
 					<button class='btn btn-success' id='guardar_locacion'>Guardar</button><br>
 					<div class='' id='result_form' style='display:none'>Gurdado con exito</div>
@@ -1211,7 +1211,13 @@ $('#adm_reservacion').click(()=>{
 
 
 
+	$('#cerrar_sesion').click(()=>{
 
+			location= "cerrar_sesion.php";
+
+
+
+	});
 
 
 

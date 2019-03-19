@@ -82,7 +82,7 @@ require('logica.php');
 	    }
 	}else if($action=="guardar_locacion"){
 
-		$servicios->guardar_locacion($_POST['nombre_locacion'],$_POST['pagina_web'],$_POST['email'],$_POST['direccion']);
+		$servicios->guardar_locacion($_POST['nombre_locacion'],$_POST['pagina_web'],$_POST['email'],$_POST['direccion'],$_POST['telefono']);
 
 	}else if($action=="actualizar_locacion"){
 
@@ -90,7 +90,7 @@ require('logica.php');
 
 		if($ready=='true'){
 			
-			$servicios->actualizar_locacion($_POST['nombre_locacion'],$_POST['pagina_web'],$_POST['email'],$_POST['direccion'],$_POST['locacion_id']);
+			$servicios->actualizar_locacion($_POST['nombre_locacion'],$_POST['pagina_web'],$_POST['email'],$_POST['direccion'],$_POST['telefono'],$_POST['locacion_id']);
 
 		}else if($ready=='false'){
 
@@ -142,6 +142,13 @@ require('logica.php');
 
 
 		$servicios->filtrar_reportes('paginar','',$_POST['pagina']);
+	
+	}else if($action=="login"){
+
+
+			$servicios->login($_POST['usuario'],$_POST['clave']);
+	
+
 	}
 
 

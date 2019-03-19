@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+<?php
+session_start();
+	if(!isset($_SESSION['usuario'])){
+
+			header("location:login.php");
+
+	}
+
+
+?>
+
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<title>Agencia Pedro</title>
@@ -28,6 +39,8 @@
 <div class="row">
 <div class="col-md-12" style="background: black; height: 50px;">
 	<p style="color:gray; padding-top: 10px;">Software agencia</p>
+	<p style="color:white;"><?php "Bienvenido! $_SESSION[nombre] $_SESSION[apellido]"?></p>
+	<button class="btn btn-danger">Cerrar Sesion</button>
 </div>
 
 </div>
@@ -52,7 +65,8 @@
 
 			<img src="assets/telegram.png" class="img-circle menu_icon" id="cargar_reportes"><label>Listar Reportes</label>				
 			
-			
+			<img src="assets/telegram.png" class="img-circle menu_icon" id="cerrar_sesion"><label>Cerrar Sesion</label>				
+
 
 			</div>
 
