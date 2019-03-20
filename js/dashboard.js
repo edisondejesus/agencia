@@ -1291,7 +1291,7 @@ $('#adm_reservacion').click(()=>{
 					<input class='form-control' type='form-control' id='nombre_pax'><br>
 					<strong>No pax</strong><br>
 					<input type='text' id='no_pax' class='form-control'><br>
-					<strong>Fecha Serivicio</strong>
+					<strong>Fecha Servicio</strong>
 					<input type='date' id='fecha_servicio' class='form-control'><br>
 					<strong>Vuelo</strong><br>
 					<input type='text' id='vuelo' class='form-control'><br>

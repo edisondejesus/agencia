@@ -79,12 +79,12 @@ class agencia  extends conexion {
 	 				
 	 				$sql="select * from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
 					inner join servicios as servi on res.servicio_id=servi.servicio_id 
-					inner join agencia as agen on res.id_agencia=agen.id_agencia order by reservacion_id desc limit 6";
+					inner join agencia as agen on res.id_agencia=agen.id_agencia order by reservacion_id desc limit 5";
 			}else{
 
 				$sql ="select * from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
 					inner join servicios as servi on res.servicio_id=servi.servicio_id 
-					inner join agencia as agen on res.id_agencia=agen.id_agencia  where fecha_servicio>='$inicio_fecha' and fecha_servicio<='$fecha_final' order by reservacion_id desc limit 6";
+					inner join agencia as agen on res.id_agencia=agen.id_agencia  where fecha_servicio>='$inicio_fecha' and fecha_servicio<='$fecha_final' order by reservacion_id desc limit 5";
 
 			}
 	 }else if($cargar_uno_solo==true){
@@ -125,7 +125,7 @@ class agencia  extends conexion {
 
  			}else if($tipo_b=='paginar'){
  				
- 				$final =6;
+ 				$final =5;
 
  				if($inicio<=1){
 
