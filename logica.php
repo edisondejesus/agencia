@@ -37,23 +37,62 @@ class agencia  extends conexion {
 
  	}
 
- 	function cargar_reportes($inicio_fecha="",$fecha_final=""){
+ 	function actualizar_reservacion($referencia,$nombre_pax,$no_pax,$fecha_servicio,$vuelo,$hora_servicio,$servicio_id,$locacion_id,$id_agencia,$reservacion_id){
+
+ 		global $conexion;
+ 		$sql = "update reservacion set referencia nombre_pax=?,no_pax=?,fecha_servicio=?,vuelo=?,hora_servicio=?,servicio_id=?,locacion_id=?,id_agencia=?,reservacion_id=?";
+
+ 		$actualizar = $conexion->prepare('ssisssiiii',
+ 			$referencia,
+ 			$nombre_pax,
+ 			$no_pax,
+ 			$fecha_servicio,
+ 			$vuelo,
+ 			$hora_servicio,
+ 			$servicio_id,
+ 			$locacion_id,
+ 			$id_agencia,
+ 			$reservacion_id
+ 		);
+
+ 		if($actualizado->execute()){
+
+ 			echo "Reservacion actualizada con exito";
+
+ 		}else{
+
+ 			echo "error al actualizar";
+
+ 		}
+
+ 	}
+
+
+ 	function cargar_reportes($inicio_fecha="",$fecha_final="",$cargar_uno_solo=false,$id_reservacion=0){
 
  		$date = date('ymd');
- 		global $conexion;
+ 		global $conexion;	
 
- 		if($inicio_fecha=="" && $fecha_final==""){
- 				
- 				$sql="select * from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
-				inner join servicios as servi on res.servicio_id=servi.servicio_id 
-				inner join agencia as agen on res.id_agencia=agen.id_agencia order by reservacion_id desc limit 6";
-		}else{
+ 	if($cargar_uno_solo==false){
 
-			$sql ="select * from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
-				inner join servicios as servi on res.servicio_id=servi.servicio_id 
-				inner join agencia as agen on res.id_agencia=agen.id_agencia  where fecha_servicio>='$inicio_fecha' and fecha_servicio<='$fecha_final' order by reservacion_id desc limit 6";
+	 		if($inicio_fecha=="" && $fecha_final==""){
+	 				
+	 				$sql="select * from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
+					inner join servicios as servi on res.servicio_id=servi.servicio_id 
+					inner join agencia as agen on res.id_agencia=agen.id_agencia order by reservacion_id desc limit 6";
+			}else{
 
-		}
+				$sql ="select * from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
+					inner join servicios as servi on res.servicio_id=servi.servicio_id 
+					inner join agencia as agen on res.id_agencia=agen.id_agencia  where fecha_servicio>='$inicio_fecha' and fecha_servicio<='$fecha_final' order by reservacion_id desc limit 6";
+
+			}
+	 }else if($cargar_uno_solo==true){
+
+				$sql ="select * from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
+					inner join servicios as servi on res.servicio_id=servi.servicio_id 
+					inner join agencia as agen on res.id_agencia=agen.id_agencia  where reservacion_id='$id_reservacion'";
+	 }
 
  		$data = [];
  		$resultado = $conexion->query($sql);
@@ -65,6 +104,7 @@ class agencia  extends conexion {
  		echo json_encode($data);
 
  	}
+
 
  function filtrar_reportes($tipo_b,$buscar=null,$inicio=0){
 
@@ -437,12 +477,16 @@ class agencia  extends conexion {
 
  	}
 
- 	function actualizar_reservacion($referencia,$nombre_pax,$no_pax,$fecha_servicio,$vuelo,$hora_servicio,$servicio_id,$loacion_id,$agencia_id,$comentarios,$id_reservacion){
+ 	function actualizar_reservacionS($referencia,$nombre_pax,$no_pax,$fecha_servicio,
+ 		$vuelo,$hora_servicio,$servicio_id,$locacion_id,$agencia_id,$comentarios,$id_reservacion){
+
  		global $conexion;
- 		$sql = "update reservacion set referencia=?,nombre_pax=?,no_pax=?,fecha_servicio=?,vuelo=?,hora_servicio=?,servicio_id=?,locacion_id=?,comentarios=? where id_reservacion=?";
+
+ 		$sql = "update reservacion set referencia=?,nombre_pax=?,no_pax=?,fecha_servicio=?,vuelo=?,hora_servicio=?,
+ 		servicio_id=?,locacion_id=?,id_agencia=?,comentarios=? where reservacion_id=?";
 
  		$actualizar = $conexion->prepare($sql);
- 		$actualizar->bind_param('ssssssiiisi',
+ 		$actualizar->bind_param('ssisssiiisi',
  			$referencia,
  			$nombre_pax,
  			$no_pax,

@@ -149,6 +149,25 @@ require('logica.php');
 			$servicios->login($_POST['usuario'],$_POST['clave']);
 	
 
+	}else if($action=="actualizar_reservacion"){
+
+		$ready = $_POST['ready'];
+
+		if($ready=='false'){
+
+			$servicios->cargar_reportes("","",true,$_POST['id_reservacion']);
+		
+		}else if ($ready=="true") {
+		
+			$servicios->actualizar_reservacionS($_POST['referencia'],$_POST['nombre_pax'],$_POST['no_pax'],$_POST['fecha_servicio'],
+				$_POST['vuelo'],$_POST['hora_servicio'],$_POST['servicio_id'],$_POST['locacion_id'],$_POST['id_agencia'],$_POST['comentarios'],
+				$_POST['reservacion_id']);
+
+		}
+
+
+
+
 	}
 
 

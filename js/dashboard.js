@@ -546,6 +546,92 @@ function actualizar_agencia(id_agencia){
 
 }
 
+function actualizar_reservacion(id_reservacion){
+
+	$.ajax({
+		url:'call_logic.php',
+		type:'post',
+		data:{
+			ready:false,
+			action:'actualizar_reservacion',
+			id_reservacion:id_reservacion
+		}
+
+	}).done(data=>{
+		console.log(data);
+		var data = JSON.parse(data);
+
+	
+		$(`#${id_reservacion}`).html(`
+			<td><input type='text' value='${data[0].referencia}' id='referencia${id_reservacion}'></td>
+			<td><input type='text' value='${data[0].nombre_pax}' id='nombre_pax${id_reservacion}'></td>
+			<td><input type='text' value='${data[0].no_pax}' id='no_pax${id_reservacion}'></td>
+			<td><input type='text' value='${data[0].fecha_servicio}' id='fecha_servicio${id_reservacion}'></td>
+			<td><input type='text' value='${data[0].vuelo}' id='vuelo${id_reservacion}'></td>
+			<td><input type='text' value='${data[0].hora_servicio}' id='hora_servicio${id_reservacion}'></td>
+			<td><select id='select_servicio${id_reservacion}'>
+				<option value='${data[0].servicio_id}'>${data[0].nombre_servicio}</option>
+			</select></td>
+			<td><select id='select_locacion${id_reservacion}'>
+				<option value='${data[0].locacion_id}'>${data[0].nombre_locacion}</option>
+			</select></td>
+			<td><select id='select_angencia${id_reservacion}'>
+				<option value='${data[0].id_agencia}'>${data[0].nombre_agencia}</option>
+			</select></td>
+			<td><input type='text' value='${data[0].comentarios}' id='comentarios${id_reservacion}'></td>
+			<td><img src='assets/update.png' class='menu_icon' id="actualizar_reservacion_a${id_reservacion}"></td>
+			<td></td>
+			`);			
+
+			load_c_box('cargar_en_actualizar',id_reservacion);
+
+
+		/*
+			id='servicio_id${id_reservacion}'
+			
+			value='${data[0].servicio_id}'
+			*/
+
+		$(`#actualizar_reservacion_a${id_reservacion}`).click(()=>{
+
+				$.ajax({
+					url:'call_logic.php',
+					type:'post',
+					data:{
+						action:'actualizar_reservacion',
+						referencia:$(`#referencia${id_reservacion}`).val(),
+						nombre_pax:$(`#nombre_pax${id_reservacion}`).val(),
+						no_pax:$(`#no_pax${id_reservacion}`).val(),
+						fecha_servicio:$(`#fecha_servicio${id_reservacion}`).val(),
+						vuelo:$(`#vuelo${id_reservacion}`).val(),
+						hora_servicio:$(`#hora_servicio${id_reservacion}`).val(),
+						servicio_id:$(`#select_servicio${id_reservacion}`).val(),
+						locacion_id:$(`#select_locacion${id_reservacion}`).val(),
+						id_agencia:$(`#select_angencia${id_reservacion}`).val(),
+						comentarios:$(`#comentarios${id_reservacion}`).val(),
+						ready:true,
+						reservacion_id:id_reservacion
+					}
+
+
+				}).done(data=>{
+
+					$('#adm_reservacion').trigger('click');
+
+						console.log(data);
+				});
+
+
+
+		});
+
+
+	});
+
+
+}
+
+
 
 function actualizar_locacion(locacion_id){
 
@@ -758,8 +844,10 @@ function eliminar_servicio(id){
 
 }
 
-function load_c_box(){
+function load_c_box(modo=null,target=null){
 //Cargar combo box
+
+	if(modo==null){
 		$.ajax({
 			url:'call_logic.php',
 			type:'post',
@@ -837,7 +925,85 @@ function load_c_box(){
 
 		});
 
+	}else if(modo=='cargar_en_actualizar'){
+			$.ajax({
+				url:'call_logic.php',
+				type:'post',
+				data:{
+					action:'cargar_servicios',
+				}
 
+
+			}).done(servicios=>{
+
+				var svc = JSON.parse(servicios);
+				var svc_interface = "";
+
+				svc.forEach(key=>{
+
+					svc_interface+=`<option value='${key.servicio_id}'>${key.nombre_servicio}</option>`;
+
+
+				});
+
+
+				$(`#select_servicio${target}`).append(svc_interface);
+
+			});
+
+			//cargar agencias en combo box
+			$.ajax({
+				url:'call_logic.php',
+				type:'post',
+				data:{
+					action:'cargar_agencia',
+				}
+
+
+			}).done(servicios=>{
+
+				var svc = JSON.parse(servicios);
+				var svc_interface = "";
+
+				svc.forEach(key=>{
+
+					svc_interface+=`<option value='${key.id_agencia}'>${key.nombre_agencia}</option>`;
+
+
+				});
+
+
+				$(`#select_angencia${target}`).append(svc_interface);
+
+			});
+
+			//cargar locacion 
+			$.ajax({
+				url:'call_logic.php',
+				type:'post',
+				data:{
+					action:'cargar_locacion',
+				}
+
+
+			}).done(servicios=>{
+
+				var svc = JSON.parse(servicios);
+				var svc_interface = "";
+
+				svc.forEach(key=>{
+
+					svc_interface+=`<option value='${key.locacion_id}'>${key.nombre_locacion}</option>`;
+
+				});
+
+
+				$(`#select_locacion${target}`).append(svc_interface);
+
+			});
+
+
+	}
 
 }
 
