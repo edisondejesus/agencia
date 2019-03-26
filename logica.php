@@ -76,15 +76,16 @@ class agencia  extends conexion {
  	if($cargar_uno_solo==false){
 
 	 		if($inicio_fecha=="" && $fecha_final==""){
+
 	 				
-	 				$sql="select * from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
-					inner join servicios as servi on res.servicio_id=servi.servicio_id 
-					inner join agencia as agen on res.id_agencia=agen.id_agencia order by reservacion_id desc limit 5";
+	 				$sql="select DATE_FORMAT(fecha_servicio,'%m/%d/%y') fecha_servicio,nombre_pax,no_pax,TIME_FORMAT(hora_servicio,'%H:%i')hora_servicio,comentarios,vuelo,nombre_servicio,description,nombre_locacion,nombre_agencia,loc.direccion,referencia,res.reservacion_id from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
+				inner join servicios as servi on res.servicio_id=servi.servicio_id 
+				inner join agencia as agen on res.id_agencia=agen.id_agencia order by reservacion_id desc limit 5";
 			}else{
 
-				$sql ="select * from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
-					inner join servicios as servi on res.servicio_id=servi.servicio_id 
-					inner join agencia as agen on res.id_agencia=agen.id_agencia  where fecha_servicio>='$inicio_fecha' and fecha_servicio<='$fecha_final' order by reservacion_id desc limit 5";
+				$sql ="select DATE_FORMAT(fecha_servicio,'%m/%d/%y') fecha_servicio,nombre_pax,no_pax,TIME_FORMAT(hora_servicio,'%H:%i')hora_servicio,comentarios,vuelo,nombre_servicio,description,nombre_locacion,nombre_agencia,loc.direccion,referencia from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id 
+				inner join servicios as servi on res.servicio_id=servi.servicio_id 
+				inner join agencia as agen on res.id_agencia=agen.id_agencia  where fecha_servicio>='$inicio_fecha' and fecha_servicio<='$fecha_final' order by reservacion_id desc limit 5";
 
 			}
 	 }else if($cargar_uno_solo==true){
@@ -106,22 +107,22 @@ class agencia  extends conexion {
  	}
 
 
- function filtrar_reportes($tipo_b,$buscar=null,$inicio=0){
+ function filtrar_reportes($tipo_b,$buscar=null,$inicio=0,$fecha_inicial="",$fecha_final=""){
 
  		$date = date('ymd');
  		global $conexion;
 
  			if($tipo_b=='buscar_agencia'){
 
-				$sql="select * from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
+				$sql="select DATE_FORMAT(fecha_servicio,'%m/%d/%y') fecha_servicio,nombre_pax,no_pax,TIME_FORMAT(hora_servicio,'%H:%i')hora_servicio,comentarios,vuelo,nombre_servicio,description,nombre_locacion,nombre_agencia,loc.direccion,referencia from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
 				inner join servicios as servi on res.servicio_id=servi.servicio_id 
-				inner join agencia as agen on res.id_agencia=agen.id_agencia where nombre_agencia like '%$buscar%' order by reservacion_id desc limit 6";
+				inner join agencia as agen on res.id_agencia=agen.id_agencia  where nombre_agencia like '%$buscar%' and fecha_servicio>='$fecha_inicial' and fecha_servicio<='$fecha_final' order by reservacion_id desc limit 6";
 
  			}else if($tipo_b=="buscar_pack"){
 
- 				$sql="select * from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
+ 				$sql="select DATE_FORMAT(fecha_servicio,'%m/%d/%y') fecha_servicio,nombre_pax,no_pax,TIME_FORMAT(hora_servicio,'%H:%i')hora_servicio,comentarios,vuelo,nombre_servicio,description,nombre_locacion,nombre_agencia,loc.direccion,referencia,res.reservacion_id from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
 				inner join servicios as servi on res.servicio_id=servi.servicio_id 
-				inner join agencia as agen on res.id_agencia=agen.id_agencia where nombre_pax like '%$buscar%' order by reservacion_id desc limit 6";
+				inner join agencia as agen on res.id_agencia=agen.id_agencia where nombre_pax like '%$buscar%' and fecha_servicio>='$fecha_inicial' and fecha_servicio<='$fecha_final' order by reservacion_id desc limit 6";
 
  			}else if($tipo_b=='paginar'){
  				
@@ -137,9 +138,16 @@ class agencia  extends conexion {
 
  				}
 
- 				$sql="select * from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
+ 				$sql="select DATE_FORMAT(fecha_servicio,'%m/%d/%y') fecha_servicio,nombre_pax,no_pax,TIME_FORMAT(hora_servicio,'%H:%i')hora_servicio,comentarios,vuelo,nombre_servicio,description,nombre_locacion,nombre_agencia,loc.direccion,referencia from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
 				inner join servicios as servi on res.servicio_id=servi.servicio_id 
 				inner join agencia as agen on res.id_agencia=agen.id_agencia  order by reservacion_id desc limit $inicio,$final";
+ 			
+ 			}else if($tipo_b=='buscar_referencia'){
+
+ 				$sql="select DATE_FORMAT(fecha_servicio,'%m/%d/%y') fecha_servicio,nombre_pax,no_pax,TIME_FORMAT(hora_servicio,'%H:%i')hora_servicio,comentarios,vuelo,nombre_servicio,description,nombre_locacion,nombre_agencia,loc.direccion,referencia,res.reservacion_id from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
+				inner join servicios as servi on res.servicio_id=servi.servicio_id 
+				inner join agencia as agen on res.id_agencia=agen.id_agencia where referencia like '%$buscar%' and fecha_servicio>='$fecha_inicial' and fecha_servicio<='$fecha_final' order by reservacion_id desc limit 6";
+
  			}
  				
 
@@ -450,7 +458,7 @@ class agencia  extends conexion {
 
  		global $conexion;
 
- 		$sql = "insert into reservacion(referencia,nombre_pax,no_pax,fecha_servicio,vuelo,hora_servicio,servicio_id,locacion_id,id_agencia,comentarios)values(?,?,?,?,?,?,?,?,?,?)";
+ 		$sql = "insert into reservacion(referencia,nombre_pax,no_pax,fecha_servicio,vuelo,hora_servicio,servicio_id,locacion_id,id_agencia,comentarios)values(?,?,?,STR_TO_DATE(?, '%m/%/%Y'),?,?,?,?,?,?)";
 
  			$guardar_reservacion = $conexion->prepare($sql);
 

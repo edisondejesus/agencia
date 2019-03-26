@@ -57,11 +57,13 @@ function cabeza_de_reporte(){
 
 	return `<h2>Reportes del dia de hoy</h2>
 		<strong>Fecha inicio</strong>
-			<input type="date" name="" id="fecha_inicio">
+			<input type="date" name="" id="fecha_inicio" placeholder='mm-dd-yy'>
 			<strong>Fecha fin</strong>
-			<input type="date" name="" id="fecha_fin">
+			<input type="date" name=""   id="fecha_fin" placeholder='mm-dd-yy'>
 			<input type='text' placeholder='nombre de agencia' id='nombre_de_agencia'>	
 			<input type='text' placeholder='nombre pax' id='nombre_de_pax'>
+			<input type='text' placeholder='referencia' id='referencia'>
+
 			<button class='btn btn-dark' onclick="buscar_por_fechas()" id='buscar' style='margin-bottom: 5px;'>Buscar</button>
 	`;
 
@@ -94,14 +96,16 @@ function buscar_por_fechas(){
 
 }
 
-function nombre_agencia_filtrer(agencia_nombre){
+function nombre_agencia_filtrer(agencia_nombre,fecha_inicial,fecha_final){
 
 	$.ajax({
 		url:'call_logic.php',
 		type:'post',
 		data:{
 			action:'nombre_agencia_filtrer',
-			nombre_agencia:agencia_nombre
+			nombre_agencia:agencia_nombre,
+			fecha_inicial:fecha_inicial,
+			fecha_final:fecha_inicial
 		}
 
 	}).done(data=>{
@@ -111,10 +115,12 @@ function nombre_agencia_filtrer(agencia_nombre){
 		reportes.forEach(key=>{
 
 
-			reporters_filtrado+=`<div class='reportes'>
-			REF# &nbsp&nbsp&nbsp&nbsp${key.referencia} NOMBRE PAX: ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp AGENCIA: ${key.nombre_agencia}<br>
-			SERVICIO:&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}     HORA:&nbsp&nbsp&nbsp&nbsp ${key.hora_servicio}&nbsp&nbsp&nbspVUELO:&nbsp&nbsp${key.vuelo}    HOTEL:&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
-			COMENTARIOS: ${key.comentarios}</div></div>`;
+
+		reporters_filtrado+=`<div class='reportes'>
+			<strong>REF#</strong> &nbsp&nbsp&nbsp&nbsp${key.referencia}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<strong>NOMBRE PAX:</strong> ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp <strong>AGENCIA:</strong> ${key.nombre_agencia}<br>
+			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp ${key.hora_servicio}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
+			<strong>COMENTARIOS:</strong> ${key.comentarios}</div>`;
+
 
 
 		});
@@ -126,6 +132,45 @@ function nombre_agencia_filtrer(agencia_nombre){
 
 
 }
+
+function codigo_referencia_buscar(referencia,fecha_inicial,fecha_final){
+
+	$.ajax({
+		url:'call_logic.php',
+		type:'post',
+		data:{
+			action:'filtrar_referencia',
+			referencia:referencia,
+			fecha_inicial:fecha_inicial,
+			fecha_final:fecha_final
+		}
+
+	}).done(data=>{
+		console.log(data)
+		var reportes = JSON.parse(data);
+		var  reporters_filtrado= "";
+		reportes.forEach(key=>{
+
+
+
+		reporters_filtrado+=`<div class='reportes'>
+			<strong>REF#</strong> &nbsp&nbsp&nbsp&nbsp${key.referencia}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<strong>NOMBRE PAX:</strong> ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp <strong>AGENCIA:</strong> ${key.nombre_agencia}<br>
+			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp ${key.hora_servicio}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
+			<strong>COMENTARIOS:</strong> ${key.comentarios}</div>`;
+
+
+
+		});
+
+		$('#reportes').html(reporters_filtrado);
+
+
+	});
+
+
+}
+
+
 
 function paginar_reporte(param){
 		//Esta variable esta declarada al comienzo del escript
@@ -170,14 +215,16 @@ function paginar_reporte(param){
 
 
 
-function nombre_pax_filtrer(nombre_pax){
+function nombre_pax_filtrer(nombre_pax,fecha_inicial,fecha_final){
 
 	$.ajax({
 		url:'call_logic.php',
 		type:'post',
 		data:{
 			action:'nombre_pax_filtrer',
-			nombre_pax:nombre_pax
+			nombre_pax:nombre_pax,
+			fecha_inicial:fecha_inicial,
+			fecha_final:fecha_final
 		}
 
 	}).done(data=>{
@@ -187,10 +234,12 @@ function nombre_pax_filtrer(nombre_pax){
 		reportes_pack.forEach(key=>{
 
 
-			reporters_filtrado_PACK+=`<div class='reportes'>
-			REF# &nbsp&nbsp&nbsp&nbsp${key.referencia} NOMBRE PAX: ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp AGENCIA: ${key.nombre_agencia}<br>
-			SERVICIO:&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}     HORA:&nbsp&nbsp&nbsp&nbsp ${key.hora_servicio}&nbsp&nbsp&nbspVUELO:&nbsp&nbsp${key.vuelo}    HOTEL:&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
-			COMENTARIOS: ${key.comentarios}</div>`;
+
+		    reporters_filtrado_PACK+=`<div class='reportes'>
+			<strong>REF#</strong> &nbsp&nbsp&nbsp&nbsp${key.referencia}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<strong>NOMBRE PAX:</strong> ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp <strong>AGENCIA:</strong> ${key.nombre_agencia}<br>
+			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp ${key.hora_servicio}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
+			<strong>COMENTARIOS:</strong> ${key.comentarios}</div>`;
+	
 
 
 		});
@@ -208,16 +257,15 @@ function  interface_ver_reportes(reports){
 	/*interface para mostrar reportes solo pasando el objeto de los reporte 
 		esta funcion lo lee y imprime en su lugar correspondiente.	
 	*/
-
 		var interface_report = cabeza_de_reporte();
 		interface_report+="<div id='reportes'>";
 		reports.forEach(key=>{
 
 
 			interface_report+=`<div class='reportes'>
-			REF# &nbsp&nbsp&nbsp&nbsp${key.referencia} NOMBRE PAX: ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp AGENCIA: ${key.nombre_agencia}<br>
-			SERVICIO:&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}     HORA:&nbsp&nbsp&nbsp&nbsp ${key.hora_servicio}&nbsp&nbsp&nbspVUELO:&nbsp&nbsp${key.vuelo}    HOTEL:&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
-			COMENTARIOS: ${key.comentarios}</div>`;
+			<strong>REF#</strong> &nbsp&nbsp&nbsp&nbsp${key.referencia}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<strong>NOMBRE PAX:</strong> ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp <strong>AGENCIA:</strong> ${key.nombre_agencia}<br>
+			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp ${key.hora_servicio}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
+			<strong>COMENTARIOS:</strong> ${key.comentarios}</div>`;
 
 
 		});
@@ -225,21 +273,33 @@ function  interface_ver_reportes(reports){
 		interface_report+=`<br><button class='btn btn-info' style='float:rigth;' onclick='imprimir()'>Imprimir</button>
 		<button class='btn btn-primary' onclick="paginar_reporte('atras')">Atras</button><button onclick="paginar_reporte('avanzar')" class='btn btn-primary' style='margin-left:2px;'>Siguiente</button>
 		`;
-		
+
+
 		$('#data_read').html(interface_report);
+
+	             //  $("#fecha_inicio").datepicker({ dateFormat: "mm-dd-yy" }).val();
+	              // $("#fecha_fin").datepicker({ dateFormat: "mm-dd-yy" }).val();
 
 		$('#nombre_de_agencia').keyup(()=>{
 
-			nombre_agencia_filtrer($('#nombre_de_agencia').val());
+			nombre_agencia_filtrer($('#nombre_de_agencia').val(),$('#fecha_inicio').val(),$('#fecha_fin').val());
 		});
 
 		$('#nombre_de_pax').keyup(()=>{
 
 
-			nombre_pax_filtrer($('#nombre_de_pax').val());
+			nombre_pax_filtrer($('#nombre_de_pax').val(),$('#fecha_inicio').val(),$('#fecha_fin').val());
 
 
 		});
+
+		$('#referencia').keyup(()=>{
+
+			codigo_referencia_buscar($('#referencia').val(),$('#fecha_inicio').val(),$('#fecha_fin').val());
+
+		});
+
+
 
 	}
 
@@ -566,9 +626,9 @@ function actualizar_reservacion(id_reservacion){
 			<td><input type='text' value='${data[0].referencia}' id='referencia${id_reservacion}'></td>
 			<td><input type='text' value='${data[0].nombre_pax}' id='nombre_pax${id_reservacion}'></td>
 			<td><input type='text' value='${data[0].no_pax}' id='no_pax${id_reservacion}'></td>
-			<td><input type='text' value='${data[0].fecha_servicio}' id='fecha_servicio${id_reservacion}'></td>
+			<td><input type='date' value='${data[0].fecha_servicio}' id='fecha_servicio${id_reservacion}'></td>
 			<td><input type='text' value='${data[0].vuelo}' id='vuelo${id_reservacion}'></td>
-			<td><input type='text' value='${data[0].hora_servicio}' id='hora_servicio${id_reservacion}'></td>
+			<td><input type='time' value='${data[0].hora_servicio}' id='hora_servicio${id_reservacion}'></td>
 			<td><select id='select_servicio${id_reservacion}'>
 				<option value='${data[0].servicio_id}'>${data[0].nombre_servicio}</option>
 			</select></td>
@@ -1293,16 +1353,15 @@ $('#adm_reservacion').click(()=>{
 					<input type='text' id='no_pax' class='form-control'><br>
 					<strong>Fecha Servicio</strong>
 					<input type='date' id='fecha_servicio' class='form-control'><br>
-					<strong>Vuelo</strong><br>
-					<input type='text' id='vuelo' class='form-control'><br>
-					<strong>Hora servicio</strong><br>
-					<input type='text' class='form-control' id='hora_servicio'><br>
-					<strong>Comentarios</strong><br>
-					<textarea class='form-control' id='comentarios'></textarea><br>
 					<strong>Seleccionar Servicio</strong><br>
 					<select id='select_servicio' class='form-control'>
 
-					</select>
+					</select><br>
+					<strong>Vuelo</strong><br>
+					<input type='text' id='vuelo' class='form-control'><br>
+					<strong>Hora servicio</strong><br>
+					<input type='time' class='form-control' class='hora_servicio' id='hora_servicio'><br>
+				
 					<strong>Seleccionar Locacion</strong><br>
 					<select id='select_locacion' class='form-control'>
 
@@ -1311,15 +1370,62 @@ $('#adm_reservacion').click(()=>{
 					<select id='select_angencia' class='form-control'>
 
 					</select><br>
+					<strong>Comentarios</strong><br>
+					<textarea class='form-control' id='comentarios'></textarea><br>
 					<button class='btn btn-success' id='guardar_reservacion'>Guardar</button><br>
 					<div class='' id='result_form' style='display:none'>Gurdado con exito</div>
 
 				</div>`);
 
 				load_c_box();
+  				//$("#fecha_servicio").datepicker({ dateFormat: "mm-dd-yy" }).val();
+  				    var options = {
+				        now: "12:35", //hh:mm 24 hour format only, defaults to current time
+				        twentyFour: false,  //Display 24 hour format, defaults to false
+				        upArrow: 'wickedpicker__controls__control-up',  //The up arrow class selector to use, for custom CSS
+				        downArrow: 'wickedpicker__controls__control-down', //The down arrow class selector to use, for custom CSS
+				        close: 'wickedpicker__close', //The close class selector to use, for custom CSS
+				        hoverState: 'hover-state', //The hover state class to use, for custom CSS
+				        title: 'Timepicker', //The Wickedpicker's title,
+				        showSeconds: false, //Whether or not to show seconds,
+				        timeSeparator: ' : ', // The string to put in between hours and minutes (and seconds)
+				        secondsInterval: 1, //Change interval for seconds, defaults to 1,
+				        minutesInterval: 1, //Change interval for minutes, defaults to 1
+				        beforeShow: null, //A function to be called before the Wickedpicker is shown
+				        afterShow: null, //A function to be called after the Wickedpicker is closed/hidden
+				        show: null, //A function to be called when the Wickedpicker is shown
+				        clearable: false //Make the picker's input clearable (has clickable "x")
+				    };
+				  	// $('#hora_servicio').wickedpicker('time');
+
+
 
 
 				$('#guardar_reservacion').click(()=>{
+
+							if($('#reference').val()==""){
+
+							  	alertify.error("El campo referencia esta vacido");
+
+							  	return;
+
+							  }else if($('#no_pax').val()==""){
+
+							  		alertify.error("Debe inidicar el numero de pasajeros");
+							  		return;
+
+							  }else if($('#nombre_pax').val()==""){
+
+							  		alertify.error("No puede dejar vacio el campo nombre_pax");
+
+							  		return;
+
+							  }else if($('#hora_servicio').val()==""){
+
+							  		alertify.error("Indique la hora del servicio");
+
+							  		return;
+							  }
 					//alert("click");
 						$.ajax({
 							url:'call_logic.php',

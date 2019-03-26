@@ -102,8 +102,9 @@ require('logica.php');
 	}else if($action=="guardar_reservacion"){
 
 		///echo $_POST['referencia'];
-
-		$servicios->guardar_reservacion($_POST['referencia'],$_POST['nombre_pax'],$_POST['no_pax'],$_POST['fecha_servicio'],$_POST['vuelo'],$_POST['hora_servicio'],$_POST['servicio_id'],$_POST['locacion_id'],$_POST['id_agencia'],$_POST['comentarios']);
+		$fecha_servicio = "GET_FORMAT($_POST[fecha_servicio],'USA')";
+	
+		$servicios->guardar_reservacion($_POST['referencia'],$_POST['nombre_pax'],$_POST['no_pax'],$fecha_servicio,$_POST['vuelo'],$_POST['hora_servicio'],$_POST['servicio_id'],$_POST['locacion_id'],$_POST['id_agencia'],$_POST['comentarios']);
 
 	}else if($action=="cargar_reservacion"){
 
@@ -129,14 +130,14 @@ require('logica.php');
 
 
 
-		$servicios->filtrar_reportes("buscar_agencia",$_POST['nombre_agencia']);
+		$servicios->filtrar_reportes("buscar_agencia",$_POST['nombre_agencia'],0,$_POST['fecha_inicial'],$_POST['fecha_final']);
 
 
 
 	}else if($action=="nombre_pax_filtrer"){
 
 
-		$servicios->filtrar_reportes("buscar_pack",$_POST['nombre_pax']);
+		$servicios->filtrar_reportes("buscar_pack",$_POST['nombre_pax'],0,$_POST['fecha_inicial'],$_POST['fecha_final']);
 
 	}else if($action=="paginar_reporte"){
 
@@ -167,6 +168,10 @@ require('logica.php');
 
 
 
+
+	}else if($action=="filtrar_referencia"){
+
+			$servicios->filtrar_reportes('buscar_referencia',$_POST['referencia'],0,$_POST['fecha_inicial'],$_POST['fecha_final']);
 
 	}
 
