@@ -173,6 +173,11 @@ require('logica.php');
 
 			$servicios->filtrar_reportes('buscar_referencia',$_POST['referencia'],0,$_POST['fecha_inicial'],$_POST['fecha_final']);
 
+	}else if($action=="contar_paginas_total"){
+
+			$servicios->total_de_paginas();
+
+
 	}
 
 

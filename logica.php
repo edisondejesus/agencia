@@ -116,7 +116,7 @@ class agencia  extends conexion {
 
 				$sql="select DATE_FORMAT(fecha_servicio,'%m/%d/%y') fecha_servicio,nombre_pax,no_pax,TIME_FORMAT(hora_servicio,'%H:%i')hora_servicio,comentarios,vuelo,nombre_servicio,description,nombre_locacion,nombre_agencia,loc.direccion,referencia from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
 				inner join servicios as servi on res.servicio_id=servi.servicio_id 
-				inner join agencia as agen on res.id_agencia=agen.id_agencia  where nombre_agencia like '%$buscar%' and fecha_servicio>='$fecha_inicial' and fecha_servicio<='$fecha_final' order by reservacion_id desc limit 6";
+				inner join agencia as agen on res.id_agencia=agen.id_agencia  where nombre_agencia like'%$buscar%' and fecha_servicio>='$fecha_inicial' and fecha_servicio<='$fecha_final' order by reservacion_id desc limit 6";
 
  			}else if($tipo_b=="buscar_pack"){
 
@@ -558,6 +558,37 @@ class agencia  extends conexion {
 
  			}
 
+ 	}
+
+
+ 	public static function total_de_paginas(){
+ 		global $conexion;
+ 		$page=0;
+ 		$recorrido=0;
+ 		$count = 0;
+ 		$sql = "select count(reservacion_id)cantidad from reservacion";
+
+ 		$cantidad_page = $conexion->query($sql);
+ 		$reportes = mysqli_fetch_object($cantidad_page);
+ 		$reportes = $reportes->cantidad;
+
+ 		while ($recorrido!=$reportes) {
+ 				
+ 			if($count==5){
+ 				
+ 				$count = 0;
+ 				$page+=1;
+
+ 				
+ 				
+ 			}
+
+
+ 			$count++;
+ 			$recorrido++;
+ 		}
+
+ 		echo $page;
  	}
 
 

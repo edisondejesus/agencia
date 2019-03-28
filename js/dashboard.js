@@ -42,13 +42,46 @@ function cargar_servicios(){
 
 }
 
+
+function quitar_cero(cadena){
+
+ 	if(cadena[0]=="0"){
+
+ 		var hora = cadena[1]+""+cadena[2]+""+cadena[3];
+
+ 		return hora;
+
+ 	}else{
+
+ 		return cadena;
+ 	}
+
+}
+
 function imprimir(){
 
 	$('#reportes').printThis({
 	importCSS:false,
-    loadCSS: "http://banners.local/agencia/css/print.css",
+    loadCSS: "/agencia/css/prints_r.css",
     header: "<h1>LAS VEGAS INTERNATIONAL TOURS SERVICES</h1>"});
 	//$('#reportes').addClass("col-md-9")
+
+
+}
+
+function contar_paginas(){
+
+	$.ajax({
+		url:'call_logic.php',
+		type:'post',
+		data:{
+			action:'contar_paginas_total'
+		}
+
+	}).done(data=>{
+
+		return data;
+	});
 
 
 }
@@ -116,10 +149,10 @@ function nombre_agencia_filtrer(agencia_nombre,fecha_inicial,fecha_final){
 
 
 
-		reporters_filtrado+=`<div class='reportes'>
+		reporters_filtrado+=`<div class='reportes'><hr>
 			<strong>REF#</strong> &nbsp&nbsp&nbsp&nbsp${key.referencia}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<strong>NOMBRE PAX:</strong> ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp <strong>AGENCIA:</strong> ${key.nombre_agencia}<br>
-			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp ${key.hora_servicio}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
-			<strong>COMENTARIOS:</strong> ${key.comentarios}</div>`;
+			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>&nbsp&nbsp${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp${quitar_cero(key.hora_servicio)}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
+			<strong>COMENTARIOS:</strong> ${key.comentarios}<hr></div>`;
 
 
 
@@ -153,10 +186,10 @@ function codigo_referencia_buscar(referencia,fecha_inicial,fecha_final){
 
 
 
-		reporters_filtrado+=`<div class='reportes'>
+		reporters_filtrado+=`<div class='reportes'><hr>
 			<strong>REF#</strong> &nbsp&nbsp&nbsp&nbsp${key.referencia}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<strong>NOMBRE PAX:</strong> ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp <strong>AGENCIA:</strong> ${key.nombre_agencia}<br>
-			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp ${key.hora_servicio}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
-			<strong>COMENTARIOS:</strong> ${key.comentarios}</div>`;
+			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>&nbsp&nbsp${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp quitar_cero(${key.hora_servicio})&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
+			<strong>COMENTARIOS:</strong> ${key.comentarios}<hr></div>`;
 
 
 
@@ -228,17 +261,17 @@ function nombre_pax_filtrer(nombre_pax,fecha_inicial,fecha_final){
 		}
 
 	}).done(data=>{
-		console.log(data)
+		console.log(data);
 		var reportes_pack = JSON.parse(data);
 		var  reporters_filtrado_PACK= "";
 		reportes_pack.forEach(key=>{
 
 
 
-		    reporters_filtrado_PACK+=`<div class='reportes'>
+		    reporters_filtrado_PACK+=`<div class='reportes'><hr>
 			<strong>REF#</strong> &nbsp&nbsp&nbsp&nbsp${key.referencia}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<strong>NOMBRE PAX:</strong> ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp <strong>AGENCIA:</strong> ${key.nombre_agencia}<br>
-			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp ${key.hora_servicio}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
-			<strong>COMENTARIOS:</strong> ${key.comentarios}</div>`;
+			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>&nbsp&nbsp${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp${quitar_cero(key.hora_servicio)}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
+			<strong>COMENTARIOS:</strong> ${key.comentarios}<hr></div>`;
 	
 
 
@@ -261,11 +294,10 @@ function  interface_ver_reportes(reports){
 		interface_report+="<div id='reportes'>";
 		reports.forEach(key=>{
 
-
-			interface_report+=`<div class='reportes'>
+			interface_report+=`<div class='reportes'><hr>
 			<strong>REF#</strong> &nbsp&nbsp&nbsp&nbsp${key.referencia}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<strong>NOMBRE PAX:</strong> ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp <strong>AGENCIA:</strong> ${key.nombre_agencia}<br>
-			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp ${key.hora_servicio}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
-			<strong>COMENTARIOS:</strong> ${key.comentarios}</div>`;
+			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>&nbsp&nbsp${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp${quitar_cero(key.hora_servicio)}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
+			<strong>COMENTARIOS:</strong> ${key.comentarios}<hr></div>`;
 
 
 		});
@@ -363,7 +395,7 @@ function cargar_reservacion(){
 				<td>${key.no_pax}</td>
 				<td>${key.fecha_servicio}</td>
 				<td>${key.vuelo}</td>
-				<td>${key.hora_servicio}</td>
+				<td>${quitar_cero(key.hora_servicio)}</td>
 				<td>${key.nombre_agencia}</td>
 				<td>${key.nombre_servicio}</td>
 				<td>${key.nombre_locacion}</td>
@@ -1069,8 +1101,7 @@ function load_c_box(modo=null,target=null){
 
 
 $('document').ready(function(){
-reporte_cargar()
-
+reporte_cargar();
 
 
 
