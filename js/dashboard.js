@@ -47,7 +47,7 @@ function quitar_cero(cadena){
 
  	if(cadena[0]=="0"){
 
- 		var hora = cadena[1]+""+cadena[2]+""+cadena[3];
+ 		var hora = cadena[1]+""+cadena[2]+""+cadena[3]+""+cadena[4];
 
  		return hora;
 
@@ -152,7 +152,7 @@ function nombre_agencia_filtrer(agencia_nombre,fecha_inicial,fecha_final){
 		reporters_filtrado+=`<div class='reportes'><hr>
 			<strong>REF#</strong> &nbsp&nbsp&nbsp&nbsp${key.referencia}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<strong>NOMBRE PAX:</strong> ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp <strong>AGENCIA:</strong> ${key.nombre_agencia}<br>
 			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>&nbsp&nbsp${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp${quitar_cero(key.hora_servicio)}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
-			<strong>COMENTARIOS:</strong> ${key.comentarios}<hr></div>`;
+			<strong>COMENTARIOS:</strong> ${key.comentarios}&nbsp&nbsp<strong>NO PAX:</strong>&nbsp&nbsp${key.no_pax}<hr></div>`;
 
 
 
@@ -188,8 +188,8 @@ function codigo_referencia_buscar(referencia,fecha_inicial,fecha_final){
 
 		reporters_filtrado+=`<div class='reportes'><hr>
 			<strong>REF#</strong> &nbsp&nbsp&nbsp&nbsp${key.referencia}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<strong>NOMBRE PAX:</strong> ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp <strong>AGENCIA:</strong> ${key.nombre_agencia}<br>
-			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>&nbsp&nbsp${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp quitar_cero(${key.hora_servicio})&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
-			<strong>COMENTARIOS:</strong> ${key.comentarios}<hr></div>`;
+			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>&nbsp&nbsp${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp${quitar_cero(key.hora_servicio)}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
+			<strong>COMENTARIOS:</strong> ${key.comentarios}&nbsp&nbsp<strong>NO PAX:</strong>&nbsp&nbsp${key.no_pax}<hr></div>`;
 
 
 
@@ -271,7 +271,7 @@ function nombre_pax_filtrer(nombre_pax,fecha_inicial,fecha_final){
 		    reporters_filtrado_PACK+=`<div class='reportes'><hr>
 			<strong>REF#</strong> &nbsp&nbsp&nbsp&nbsp${key.referencia}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<strong>NOMBRE PAX:</strong> ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp <strong>AGENCIA:</strong> ${key.nombre_agencia}<br>
 			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>&nbsp&nbsp${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp${quitar_cero(key.hora_servicio)}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
-			<strong>COMENTARIOS:</strong> ${key.comentarios}<hr></div>`;
+			<strong>COMENTARIOS:</strong> ${key.comentarios}&nbsp&nbsp<strong>NO PAX:</strong>&nbsp&nbsp${key.no_pax}<hr></div>`;
 	
 
 
@@ -297,7 +297,7 @@ function  interface_ver_reportes(reports){
 			interface_report+=`<div class='reportes'><hr>
 			<strong>REF#</strong> &nbsp&nbsp&nbsp&nbsp${key.referencia}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<strong>NOMBRE PAX:</strong> ${key.nombre_pax}&nbsp&nbsp&nbsp&nbsp <strong>AGENCIA:</strong> ${key.nombre_agencia}<br>
 			<strong>SERVICIO:</strong>&nbsp&nbsp&nbsp&nbsp${key.nombre_servicio}&nbsp&nbsp<strong>Fecha Servicio:</strong>&nbsp&nbsp${key.fecha_servicio}&nbsp&nbsp&nbsp&nbsp<strong>HORA:</strong>&nbsp&nbsp&nbsp&nbsp${quitar_cero(key.hora_servicio)}&nbsp&nbsp&nbsp<strong>VUELO:</strong>&nbsp&nbsp${key.vuelo}&nbsp&nbsp&nbsp&nbsp<strong>HOTEL:</strong>&nbsp&nbsp&nbsp${key.nombre_locacion}<br>
-			<strong>COMENTARIOS:</strong> ${key.comentarios}<hr></div>`;
+			<strong>COMENTARIOS:</strong> ${key.comentarios}&nbsp&nbsp<strong>NO PAX:</strong>&nbsp&nbsp${key.no_pax}<hr></div>`;
 
 
 		});
@@ -364,7 +364,9 @@ function cargar_reservacion(){
 		url:'call_logic.php',
 		type:'post',
 		data:{
-			action:'cargar_reservacion'	
+		action:'cargar_reservacion',
+		limitar:10
+
 		}
 
 	
@@ -410,6 +412,128 @@ function cargar_reservacion(){
 		$('#servicios').html(servicios);
 
 	});
+
+
+
+
+}
+
+function reservacion_s_nombre_pax(nombre_pax){
+
+	$.ajax({
+		url:'call_logic.php',
+		type:'post',
+		data:{
+			action:'cargar_reservacion_nombre_pax',
+			nombre_pax:nombre_pax
+
+		}
+
+	
+	}).done(data=>{
+		console.log(data);
+		var info = JSON.parse(data);
+		var servicios = `<table class='table'>
+		<tr>
+			<td>Referencia</td>
+			<td>Nombre Pax</td>
+			<td>No Pax</td>
+			<td>Fecha servicio</td>
+			<td>Vuelo</td>
+			<td>Hora Servicio</td>
+			<td>Agencia</td>
+			<td>Servicio</td>
+			<td>Locacion</td>
+			<td>Comentarios</td>
+			<td>Actualizar</td>
+			<td>Eliminar</td>
+		</tr>
+		`;
+		info.forEach(key=>{
+
+			servicios+=`<tr id='${key.reservacion_id}'>
+				<td>${key.referencia}</td>
+				<td>${key.nombre_pax}</td>
+				<td>${key.no_pax}</td>
+				<td>${key.fecha_servicio}</td>
+				<td>${key.vuelo}</td>
+				<td>${quitar_cero(key.hora_servicio)}</td>
+				<td>${key.nombre_agencia}</td>
+				<td>${key.nombre_servicio}</td>
+				<td>${key.nombre_locacion}</td>
+				<td>${key.comentarios}</td>
+				<td ><img src='assets/update.png' class='menu_icon' onclick="actualizar_reservacion(${key.reservacion_id})"></td>
+				<td><img src='assets/delete.png' class='menu_icon' onclick="eliminar_reservacion(${key.reservacion_id})"></td>
+			</tr>`;
+
+		});
+
+		servicios+="</table>";
+		$('#servicios').html(servicios);
+
+	});
+
+
+
+
+}
+
+function reservacion_s_referencia(referencia){
+		$.ajax({
+		url:'call_logic.php',
+		type:'post',
+		data:{
+		action:'cargar_reservacion_referencia',
+		nombre_referencia:referencia
+
+		}
+
+	
+	}).done(data=>{
+		console.log(data);
+		var info = JSON.parse(data);
+		var servicios = `<table class='table'>
+		<tr>
+			<td>Referencia</td>
+			<td>Nombre Pax</td>
+			<td>No Pax</td>
+			<td>Fecha servicio</td>
+			<td>Vuelo</td>
+			<td>Hora Servicio</td>
+			<td>Agencia</td>
+			<td>Servicio</td>
+			<td>Locacion</td>
+			<td>Comentarios</td>
+			<td>Actualizar</td>
+			<td>Eliminar</td>
+		</tr>
+		`;
+		info.forEach(key=>{
+
+			servicios+=`<tr id='${key.reservacion_id}'>
+				<td>${key.referencia}</td>
+				<td>${key.nombre_pax}</td>
+				<td>${key.no_pax}</td>
+				<td>${key.fecha_servicio}</td>
+				<td>${key.vuelo}</td>
+				<td>${quitar_cero(key.hora_servicio)}</td>
+				<td>${key.nombre_agencia}</td>
+				<td>${key.nombre_servicio}</td>
+				<td>${key.nombre_locacion}</td>
+				<td>${key.comentarios}</td>
+				<td ><img src='assets/update.png' class='menu_icon' onclick="actualizar_reservacion(${key.reservacion_id})"></td>
+				<td><img src='assets/delete.png' class='menu_icon' onclick="eliminar_reservacion(${key.reservacion_id})"></td>
+			</tr>`;
+
+		});
+
+		servicios+="</table>";
+		$('#servicios').html(servicios);
+
+	});
+
+
+
 
 
 
@@ -1364,7 +1488,7 @@ $('#adm_reservacion').click(()=>{
 				<p>Control de Reservacion</p>
 				<div class='dashboard_icon'>
 				<img src='assets/plus.png' class='img-circle' id='agregar_reservacion'><label>Agregar Reservacion</label>
-				</div>
+				</div><br><strong>Buscar</strong><input type='search' placeholder='NOMBRE PAX' class='form-control col-md-6' style='padding-left:5px;' id='nombre_pax_key'><input type='search' placeholder='REF' id='ref_search_key' class='form-control col-md-4'>
 				<div id='servicios' style='overflow-y:scroll; height:300px;'></div>
 			</div>
 		`;
@@ -1372,16 +1496,30 @@ $('#adm_reservacion').click(()=>{
 		cargar_reservacion();
 		$('#data_read').html(servicio_panel);
 
+		$('#nombre_pax_key').keyup(()=>{
+
+				reservacion_s_nombre_pax($('#nombre_pax_key').val());
+
+		});
+
+		$('#ref_search_key').keyup(()=>{
+
+				reservacion_s_referencia($('#ref_search_key').val());
+
+
+		});
+
+
 		$('#agregar_reservacion').click(()=>{
 
 
 				$('#forms').html(`<div class='card form-modular col-md-9'>
 					<strong>Referencia</strong>
-					<input type='text' class='form-control' id='reference'><br>
+					<input type='text' class='form-control' id='reference' onkeyup="javascript:this.value=this.value.toUpperCase();"><br>
 					<strong>Nombre Pax</strong>
-					<input class='form-control' type='form-control' id='nombre_pax'><br>
+					<input class='form-control' type='form-control' id='nombre_pax'  onkeyup="javascript:this.value=this.value.toUpperCase();"><br>
 					<strong>No pax</strong><br>
-					<input type='text' id='no_pax' class='form-control'><br>
+					<input type='text' id='no_pax' class='form-control' ><br>
 					<strong>Fecha Servicio</strong>
 					<input type='date' id='fecha_servicio' class='form-control'><br>
 					<strong>Seleccionar Servicio</strong><br>
@@ -1389,7 +1527,7 @@ $('#adm_reservacion').click(()=>{
 
 					</select><br>
 					<strong>Vuelo</strong><br>
-					<input type='text' id='vuelo' class='form-control'><br>
+					<input type='text' id='vuelo' class='form-control' onkeyup="javascript:this.value=this.value.toUpperCase();"><br>
 					<strong>Hora servicio</strong><br>
 					<input type='time' class='form-control' class='hora_servicio' id='hora_servicio'><br>
 				
@@ -1402,7 +1540,7 @@ $('#adm_reservacion').click(()=>{
 
 					</select><br>
 					<strong>Comentarios</strong><br>
-					<textarea class='form-control' id='comentarios'></textarea><br>
+					<textarea class='form-control' id='comentarios'  onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea><br>
 					<button class='btn btn-success' id='guardar_reservacion'>Guardar</button><br>
 					<div class='' id='result_form' style='display:none'>Gurdado con exito</div>
 
@@ -1436,9 +1574,9 @@ $('#adm_reservacion').click(()=>{
 
 							if($('#reference').val()==""){
 
-							  	alertify.error("El campo referencia esta vacido");
+							  //	alertify.error("El campo referencia esta vacido");
 
-							  	return;
+							  	//return;
 
 							  }else if($('#no_pax').val()==""){
 
@@ -1491,7 +1629,7 @@ $('#adm_reservacion').click(()=>{
 									$('#result_form').addClass("alert alert-success");
 									$('#result_form').text("Guardado con exito");
 									$('#result_form').show('slow');
-									$('#adm_reservacion').click('trigger');
+									$('#adm_reservacion').trigger('click');
 
 
 

@@ -102,14 +102,18 @@ require('logica.php');
 	}else if($action=="guardar_reservacion"){
 
 		///echo $_POST['referencia'];
-		$fecha_servicio = "GET_FORMAT($_POST[fecha_servicio],'USA')";
-	
-		$servicios->guardar_reservacion($_POST['referencia'],$_POST['nombre_pax'],$_POST['no_pax'],$fecha_servicio,$_POST['vuelo'],$_POST['hora_servicio'],$_POST['servicio_id'],$_POST['locacion_id'],$_POST['id_agencia'],$_POST['comentarios']);
+		$fe = $_POST['fecha_servicio'];
+
+		$servicios->guardar_reservacion($_POST['referencia'],$_POST['nombre_pax'],$_POST['no_pax'],$fe,$_POST['vuelo'],$_POST['hora_servicio'],$_POST['servicio_id'],$_POST['locacion_id'],$_POST['id_agencia'],$_POST['comentarios']);
 
 	}else if($action=="cargar_reservacion"){
 
+		if(isset($_POST['limite'])){
 
-		$servicios->cargar_reportes();
+			$limite =$_POST['limite'];
+		}
+
+		$servicios->cargar_reportes("","",false,0,10);
 
 	}else if($action=="eliminar_reservacion"){
 
@@ -177,6 +181,17 @@ require('logica.php');
 
 			$servicios->total_de_paginas();
 
+
+	}else if($action=="cargar_reservacion_referencia"){
+
+
+
+		$servicios->filtrar_reservaciones($_POST['nombre_referencia'],'referencia');
+
+	}else if($action=='cargar_reservacion_nombre_pax'){
+
+
+		$servicios->filtrar_reservaciones($_POST['nombre_pax'],'nombre_pax');
 
 	}
 

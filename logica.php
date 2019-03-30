@@ -37,6 +37,37 @@ class agencia  extends conexion {
 
  	}
 
+ 	function filtrar_reservaciones($criterio,$conf){
+ 		global $conexion;
+ 		//echo $criterio;
+
+ 		if($conf=='nombre_pax'){
+
+ 			$SQL ="select DATE_FORMAT(fecha_servicio,'%m/%d/%y') fecha_servicio,nombre_pax,no_pax,TIME_FORMAT(hora_servicio,'%H:%i')hora_servicio,comentarios,vuelo,nombre_servicio,description,nombre_locacion,nombre_agencia,loc.direccion,referencia,res.reservacion_id from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
+				inner join servicios as servi on res.servicio_id=servi.servicio_id 
+				inner join agencia as agen on res.id_agencia=agen.id_agencia where nombre_pax like '%$criterio%' order by reservacion_id desc limit 100";
+
+ 		}else if($conf=='referencia'){
+
+ 			$SQL ="select DATE_FORMAT(fecha_servicio,'%m/%d/%y') fecha_servicio,nombre_pax,no_pax,TIME_FORMAT(hora_servicio,'%H:%i')hora_servicio,comentarios,vuelo,nombre_servicio,description,nombre_locacion,nombre_agencia,loc.direccion,referencia,res.reservacion_id from reservacion as res inner join locacion as loc on res.locacion_id=loc.locacion_id
+				inner join servicios as servi on res.servicio_id=servi.servicio_id 
+				inner join agencia as agen on res.id_agencia=agen.id_agencia where referencia like'%$criterio%' order by reservacion_id desc limit 100";
+
+ 		}
+
+ 		$data = [];
+ 		$resultado = $conexion->query($SQL);
+
+ 		foreach ($resultado as $key) {
+ 		
+ 				$data[] = $key;
+ 		}
+ 		echo json_encode($data);
+
+
+ 	}
+
+
  	function actualizar_reservacion($referencia,$nombre_pax,$no_pax,$fecha_servicio,$vuelo,$hora_servicio,$servicio_id,$locacion_id,$id_agencia,$reservacion_id){
 
  		global $conexion;
@@ -458,7 +489,7 @@ class agencia  extends conexion {
 
  		global $conexion;
 
- 		$sql = "insert into reservacion(referencia,nombre_pax,no_pax,fecha_servicio,vuelo,hora_servicio,servicio_id,locacion_id,id_agencia,comentarios)values(?,?,?,STR_TO_DATE(?, '%m/%/%Y'),?,?,?,?,?,?)";
+ 		$sql = "insert into reservacion(referencia,nombre_pax,no_pax,fecha_servicio,vuelo,hora_servicio,servicio_id,locacion_id,id_agencia,comentarios)values(?,?,?,?,?,?,?,?,?,?)";
 
  			$guardar_reservacion = $conexion->prepare($sql);
 
